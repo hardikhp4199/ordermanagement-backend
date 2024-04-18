@@ -14,7 +14,9 @@ const bankDetailsRouter = require("./routes/bankDetails");
 const supplier = require("./routes/supplier");
 const product = require("./routes/product");
 const order = require("./routes/order");
+const authComponent = require("./routes/authComponent");
 
+app.use("/", authComponent);
 app.use("/", bankDetailsRouter);
 app.use("/",supplier);
 app.use("/",product);

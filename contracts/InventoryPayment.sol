@@ -414,7 +414,9 @@ contract InventoryPayment {
         uint256 orderTotalAmount,
         string memory orderStatus,
         uint256 supplierId,
+        string memory supplierName,
         uint256[] memory productIds,
+        string[] memory productNames,
         uint256[] memory productQtys,
         bool isReceived
     ) {
@@ -422,13 +424,22 @@ contract InventoryPayment {
         for (uint256 i = 0; i < orders.length; i++) {
             if (orders[i].orderNo == _orderNo) {
                 Order storage order = orders[i];
+                
+                string memory _supplierName = suppliers[order.supplierId].supplierName;
+                
+                string[] memory _productNames = new string[](order.productIds.length);
+                for(uint256 j = 0; j < order.productIds.length; j++) {
+                    _productNames[j] = products[order.productIds[j]].productName;
+                }
                 return (
                     order.orderNo,
                     order.orderDate,
                     order.orderTotalAmount,
                     order.orderStatus,
                     order.supplierId,
+                    _supplierName,
                     order.productIds,
+                    _productNames,
                     order.productQtys,
                     order.isReceived
                 );

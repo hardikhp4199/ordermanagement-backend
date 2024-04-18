@@ -8,7 +8,6 @@ const { contractABI, web3 } = require('../config');
 const getNetworkId = async () => {
   try {
     const networkId = await web3.eth.net.getId();
-    console.log("Network ID:", networkId);
     return networkId;
   } catch (error) {
     console.error("Error getting network ID:", error);
@@ -26,7 +25,6 @@ const getContractInstance = async () => {
     }
 
     const contractAddress = deployedNetwork.address;
-    console.log("Contract Address:", contractAddress);
 
     // Create a contract instance
     const contract = new web3.eth.Contract(contractABI.abi, contractAddress);
@@ -60,7 +58,9 @@ router.post("/api/addBankDetails", async (req, res) => {
     const gasEstimate = await contract.methods
       .addUserBankDetails(bankName, accountNumber, backupAmount)
       .estimateGas({ from: accounts[0] });
+
     const gasLimit = gasEstimate * 2;
+
     await contract.methods
       .addUserBankDetails(bankName, accountNumber, backupAmount)
       .send({ from: accounts[0], gas: gasLimit });

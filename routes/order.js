@@ -68,24 +68,25 @@ router.post("/api/order/received", async (req, res) => {
     };
 
     contract.getPastEvents('LogDebugMessage', { fromBlock: 0, toBlock: 'latest' }, function(error, events) {
-      if (!error) {
-          events.forEach(event => {
-              console.log("Log message:", event.returnValues.message);
-          });
-      } else {
-          console.error("Error fetching events:", error);
-      }
-  });
+          if (!error) {
+              events.forEach(event => {
+                  console.log("Log message:", event.returnValues.message);
+              });
+          } else {
+              console.error("Error fetching events:", error);
+          }
+      });
 
-  contract.getPastEvents('LogOrderStatus', { fromBlock: 0, toBlock: 'latest' }, function(error, events) {
-    if (!error) {
-        events.forEach(event => {
-            console.log("LogOrderStatus message:", event.returnValues.message);
-        });
-    } else {
-        console.error("LogOrderStatus Error fetching events:", error);
-    }
-});
+      contract.getPastEvents('LogOrderStatus', { fromBlock: 0, toBlock: 'latest' }, function(error, events) {
+        if (!error) {
+            events.forEach(event => {
+                console.log("LogOrderStatus message:", event.returnValues.message);
+            });
+        } else {
+            console.error("LogOrderStatus Error fetching events:", error);
+        }
+    });
+
     const gasEstimate = await contract.methods
       .receiveOrder(orderNo, receivedProducts)
       .estimateGas({ from: accounts[0] });
@@ -121,6 +122,7 @@ router.get("/api/order/details", async (req, res) => {
       const orderDetails = await contract.methods
         .getOrderDetails(accounts[0], orderCount[i])
         .call();
+        console.log("orderDetails", orderDetails);
       orderDetailsObject.push(orderDetails);
     }
     res.status(200).json({ data: orderDetailsObject ,message: "Order details get Successfully." });
